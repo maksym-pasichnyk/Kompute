@@ -143,29 +143,6 @@ struct VulkanApplication {
     }
 
     void CreateLogicalDevice(this VulkanApplication& Self) {
-//        for (u32 i = 0; i < Self.PhysicalDeviceCount; i += 1) {
-//            auto Core_1_3 = VkPhysicalDeviceVulkan13Features{
-//                .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
-//                .pNext = {}
-//            };
-//            auto Core_1_2 = VkPhysicalDeviceVulkan12Features{
-//                .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES,
-//                .pNext = &Core_1_3
-//            };
-//            auto Core_1_1 = VkPhysicalDeviceVulkan11Features{
-//                .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES,
-//                .pNext = &Core_1_2
-//            };
-//            auto Features2 = VkPhysicalDeviceFeatures2{
-//                .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
-//                .pNext = &Core_1_1,
-//                .features = {}
-//            };
-//
-//            auto PhysicalDevice = Self.PhysicalDevices[i];
-//            PhysicalDevice->GetPhysicalDeviceFeatures2(&Features2);
-//        }
-
         auto EnabledExtensionNames = std::array{
             "VK_KHR_swapchain",
             "VK_KHR_copy_commands2",
@@ -203,11 +180,6 @@ struct VulkanApplication {
             .pNext = &Core_1_2,
             .synchronization2 = VK_TRUE
         };
-//        auto Core_1_3 = VkPhysicalDeviceVulkan13Features{
-//            .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES,
-//            .pNext = &Core_1_2,
-//            .synchronization2 = VK_TRUE
-//        };
         auto Features2 = VkPhysicalDeviceFeatures2{
             .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2,
             .pNext = &Core_1_3,
@@ -626,8 +598,6 @@ struct VulkanApplication {
                     }},
                     std::numeric_limits<u64>::max()
                 );
-//                Self.DeviceDispatcher->vkWaitForFences(Self.LogicalDevice, 1, &Self.Fences[FrameIndex], VK_TRUE, UINT64_MAX);
-//                Self.DeviceDispatcher->vkResetFences(Self.LogicalDevice, 1, &Self.Fences[FrameIndex]);
                 Self.DeviceDispatcher->vkResetDescriptorPool(Self.LogicalDevice, Self.DescriptorPools[FrameIndex], VkDescriptorPoolResetFlags());
             }
 
@@ -902,7 +872,7 @@ struct VulkanApplication {
                         },
                     }
                 }},
-                nullptr // Self.Fences[FrameIndex]
+                nullptr
             );
             Self.DeviceDispatcher->vkQueuePresentKHR(
                 Self.Queue,
