@@ -1,0 +1,44 @@
+#version 450 core
+
+#extension GL_EXT_buffer_reference : require
+#extension GL_EXT_buffer_reference2 : require
+
+layout(local_size_x_id = 0) in;
+layout(local_size_y_id = 1) in;
+layout(local_size_z_id = 2) in;
+
+//layout(buffer_reference) buffer VertexBufferAddress {
+//    vec3 position;
+//    vec4 colour;
+//    vec2 texcoord;
+//};
+//layout(buffer_reference) buffer MeshletBufferAddress {
+//    uint vertex_begin;
+//    uint vertex_count;
+//    uint primitive_begin;
+//    uint primitive_count;
+//};
+//layout(buffer_reference) buffer PrimitiveBufferAddress {
+//    uint element;
+//};
+
+//layout(push_constant) uniform PC {
+//    VertexBufferAddress vertices;
+//    MeshletBufferAddress meshlets;
+//    PrimitiveBufferAddress primitives;
+//} pc;
+
+layout(set = 0, binding = 0, rgba32f) uniform image2D StorageImage;
+
+void main() {
+    if (any(greaterThanEqual(gl_GlobalInvocationID.xy, imageSize(StorageImage)))) {
+        return;
+    }
+    vec2 ImageSize = vec2(imageSize(StorageImage));
+    vec2 TexCoords = (vec2(gl_GlobalInvocationID.xy) * 2.0f - ImageSize) / ImageSize.yy;
+    float Sphere = step(dot(TexCoords, TexCoords), 0.5);
+    imageStore(StorageImage, ivec2(gl_GlobalInvocationID.xy), vec4(Sphere));
+//    vec3 position = pc.vertices[pc.meshlets[gl_GlobalInvocationID.x].vertex_begin].position;
+//    vec4 colour = pc.vertices[pc.meshlets[gl_GlobalInvocationID.x].vertex_begin].colour;
+//    vec2 texcoord = pc.vertices[pc.meshlets[gl_GlobalInvocationID.x].vertex_begin].texcoord;
+}
